@@ -5,7 +5,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/hypebid/go-micro-template/internal/rpc/pb"
+	"github.com/hypebid/twitch-views-service/internal/rpc/pb"
 	"github.com/stretchr/testify/assert"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/metadata"

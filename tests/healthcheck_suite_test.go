@@ -10,8 +10,8 @@ import (
 	"net"
 	"testing"
 
-	"github.com/hypebid/go-micro-template/internal/config"
-	"github.com/hypebid/go-micro-template/internal/rpc"
+	"github.com/hypebid/twitch-views-service/internal/config"
+	"github.com/hypebid/twitch-views-service/internal/rpc"
 	"github.com/stretchr/testify/suite"
 	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/test/bufconn"

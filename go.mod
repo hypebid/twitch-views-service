@@ -1,4 +1,4 @@
-module github.com/hypebid/go-micro-template
+module github.com/hypebid/twitch-views-service
 
 go 1.16
 

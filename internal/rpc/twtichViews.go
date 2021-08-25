@@ -5,9 +5,9 @@ import (
 	"runtime"
 
 	"github.com/hypebid/go-kit/grpc/middleware"
-	"github.com/hypebid/go-micro-template/internal/config"
-	"github.com/hypebid/go-micro-template/internal/db"
-	"github.com/hypebid/go-micro-template/internal/rpc/pb"
+	"github.com/hypebid/twitch-views-service/internal/config"
+	"github.com/hypebid/twitch-views-service/internal/db"
+	"github.com/hypebid/twitch-views-service/internal/rpc/pb"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promauto"
 	"github.com/sirupsen/logrus"

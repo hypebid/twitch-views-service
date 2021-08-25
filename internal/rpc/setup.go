@@ -11,8 +11,8 @@ import (
 	grpc_ctxtags "github.com/grpc-ecosystem/go-grpc-middleware/tags"
 	grpc_reqAuth "github.com/hypebid/go-kit/grpc/middleware/auth"
 	grpc_reqId "github.com/hypebid/go-kit/grpc/middleware/transactionId"
-	"github.com/hypebid/go-micro-template/internal/config"
-	"github.com/hypebid/go-micro-template/internal/rpc/pb"
+	"github.com/hypebid/twitch-views-service/internal/config"
+	"github.com/hypebid/twitch-views-service/internal/rpc/pb"
 	"github.com/sirupsen/logrus"
 	"google.golang.org/grpc"
 )

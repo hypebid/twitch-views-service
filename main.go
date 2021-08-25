@@ -7,8 +7,8 @@ import (
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	_ "github.com/quasilyte/go-ruleguard/dsl"
 
-	"github.com/hypebid/go-micro-template/internal/config"
-	"github.com/hypebid/go-micro-template/internal/rpc"
+	"github.com/hypebid/twitch-views-service/internal/config"
+	"github.com/hypebid/twitch-views-service/internal/rpc"
 )
 
 func metrics(c *config.Config) {

@@ -1,24 +1,7 @@
-# go-micro-template
-A Golang micro-service template. The boilerplate code for all of Hype Bid's micro-services coded in Go.
+# twitch-views-service 
 
-## Features
-- gRPC Server
-  - HealthCheck function
-- gRPC Inteceptors / middleware
-  - Tranaction Id
-  - Logrus logger
-  - ctx tags
-  - Recover from panics
-  - Hash validation check
-- Gorm integration with Postgres
-- [Doppler](https://docs.doppler.com/docs/start) for secrets
-- Docker file
-- Docker-Compose file
-- Go modules
-- Github Actions
-- Prometheus metrics integrated
-- Go tests
-- [pre-commit ci](https://pre-commit.com/)
+## Todo
+- everything 
 
 ## Install pre-commit
 ```
@@ -27,8 +10,8 @@ brew install pre-commit
 
 ## Run Application Using Doppler
 ```
-go build -o bin/micro-template -v .
-doppler run --command="./bin/micro-template"
+go build -o bin/twtich-views -v .
+doppler run --command="./bin/twitch-views"
 ```
 
 ## Run Tests Using Doppler
