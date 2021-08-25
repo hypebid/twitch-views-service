@@ -1,0 +1,3 @@
+setup:
+  project: go-micro-template 
+  config: dev

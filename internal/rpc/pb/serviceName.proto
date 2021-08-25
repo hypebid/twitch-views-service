@@ -1,0 +1,28 @@
+/* protoc --go_out=. --go_opt=paths=source_relative \
+--go-grpc_out=. --go-grpc_opt=paths=source_relative \
+serviceName.proto */
+syntax = "proto3";
+
+option go_package = "github.com/hypebid/go-micro-template/internal/grpc/pb";
+
+package hypebid;
+
+// The <ServiceName> service
+service ServiceName{
+  // Used to check on the status of the service and all it's dependencies
+  rpc HealthCheck(HealthRequest) returns (HealthStatus) {}
+}
+
+message HealthRequest{
+  string message = 1;
+}
+
+message HealthStatus{
+  string transactionId = 1;
+  string serviceName = 2;
+  string releaseDate = 3;
+  string releaseSlug = 4;
+  string releaseVersion = 5;
+  bool databaseOnline = 6;
+  string message = 7;
+}

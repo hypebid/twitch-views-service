@@ -1,0 +1,32 @@
+version: "3"
+services:
+  serviceName-postgres:
+    image: postgres:latest
+    network_mode: bridge
+    container_name: serviceName-postgres
+    volumes:
+      - serviceName-data:/var/lib/postgresql/data
+    expose:
+      - 5432
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_PASSWORD=admin
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=postgres
+
+  # serviceName-app:
+  #   image: serviceName:latest
+  #   network_mode: bridge
+  #   container_name: serviceName-app
+  #   build: .
+  #   expose:
+  #     - 8880
+  #   ports:
+  #     - 8880:8880
+  #   depends_on:
+  #     - serviceName-postgres
+  #   links:
+  #     - serviceName-postgres
+volumes:
+  serviceName-data:
