@@ -1,6 +1,6 @@
 /* protoc --go_out=. --go_opt=paths=source_relative \
 --go-grpc_out=. --go-grpc_opt=paths=source_relative \
-serviceName.proto */
+twitchViews.proto */
 syntax = "proto3";
 
 option go_package = "github.com/hypebid/go-micro-template/internal/grpc/pb";
@@ -8,7 +8,7 @@ option go_package = "github.com/hypebid/go-micro-template/internal/grpc/pb";
 package hypebid;
 
 // The <ServiceName> service
-service ServiceName{
+service TwitchViews{
   // Used to check on the status of the service and all it's dependencies
   rpc HealthCheck(HealthRequest) returns (HealthStatus) {}
 }

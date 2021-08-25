@@ -14,90 +14,90 @@ import (
 // Requires gRPC-Go v1.32.0 or later.
 const _ = grpc.SupportPackageIsVersion7
 
-// ServiceNameClient is the client API for ServiceName service.
+// TwitchViewsClient is the client API for TwitchViews service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
-type ServiceNameClient interface {
+type TwitchViewsClient interface {
 	// Used to check on the status of the service and all it's dependencies
 	HealthCheck(ctx context.Context, in *HealthRequest, opts ...grpc.CallOption) (*HealthStatus, error)
 }
 
-type serviceNameClient struct {
+type twitchViewsClient struct {
 	cc grpc.ClientConnInterface
 }
 
-func NewServiceNameClient(cc grpc.ClientConnInterface) ServiceNameClient {
-	return &serviceNameClient{cc}
+func NewTwitchViewsClient(cc grpc.ClientConnInterface) TwitchViewsClient {
+	return &twitchViewsClient{cc}
 }
 
-func (c *serviceNameClient) HealthCheck(ctx context.Context, in *HealthRequest, opts ...grpc.CallOption) (*HealthStatus, error) {
+func (c *twitchViewsClient) HealthCheck(ctx context.Context, in *HealthRequest, opts ...grpc.CallOption) (*HealthStatus, error) {
 	out := new(HealthStatus)
-	err := c.cc.Invoke(ctx, "/hypebid.ServiceName/HealthCheck", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/hypebid.TwitchViews/HealthCheck", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-// ServiceNameServer is the server API for ServiceName service.
-// All implementations must embed UnimplementedServiceNameServer
+// TwitchViewsServer is the server API for TwitchViews service.
+// All implementations must embed UnimplementedTwitchViewsServer
 // for forward compatibility
-type ServiceNameServer interface {
+type TwitchViewsServer interface {
 	// Used to check on the status of the service and all it's dependencies
 	HealthCheck(context.Context, *HealthRequest) (*HealthStatus, error)
-	mustEmbedUnimplementedServiceNameServer()
+	mustEmbedUnimplementedTwitchViewsServer()
 }
 
-// UnimplementedServiceNameServer must be embedded to have forward compatible implementations.
-type UnimplementedServiceNameServer struct {
+// UnimplementedTwitchViewsServer must be embedded to have forward compatible implementations.
+type UnimplementedTwitchViewsServer struct {
 }
 
-func (UnimplementedServiceNameServer) HealthCheck(context.Context, *HealthRequest) (*HealthStatus, error) {
+func (UnimplementedTwitchViewsServer) HealthCheck(context.Context, *HealthRequest) (*HealthStatus, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method HealthCheck not implemented")
 }
-func (UnimplementedServiceNameServer) mustEmbedUnimplementedServiceNameServer() {}
+func (UnimplementedTwitchViewsServer) mustEmbedUnimplementedTwitchViewsServer() {}
 
-// UnsafeServiceNameServer may be embedded to opt out of forward compatibility for this service.
-// Use of this interface is not recommended, as added methods to ServiceNameServer will
+// UnsafeTwitchViewsServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to TwitchViewsServer will
 // result in compilation errors.
-type UnsafeServiceNameServer interface {
-	mustEmbedUnimplementedServiceNameServer()
+type UnsafeTwitchViewsServer interface {
+	mustEmbedUnimplementedTwitchViewsServer()
 }
 
-func RegisterServiceNameServer(s grpc.ServiceRegistrar, srv ServiceNameServer) {
-	s.RegisterService(&ServiceName_ServiceDesc, srv)
+func RegisterTwitchViewsServer(s grpc.ServiceRegistrar, srv TwitchViewsServer) {
+	s.RegisterService(&TwitchViews_ServiceDesc, srv)
 }
 
-func _ServiceName_HealthCheck_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _TwitchViews_HealthCheck_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(HealthRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ServiceNameServer).HealthCheck(ctx, in)
+		return srv.(TwitchViewsServer).HealthCheck(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/hypebid.ServiceName/HealthCheck",
+		FullMethod: "/hypebid.TwitchViews/HealthCheck",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ServiceNameServer).HealthCheck(ctx, req.(*HealthRequest))
+		return srv.(TwitchViewsServer).HealthCheck(ctx, req.(*HealthRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-// ServiceName_ServiceDesc is the grpc.ServiceDesc for ServiceName service.
+// TwitchViews_ServiceDesc is the grpc.ServiceDesc for TwitchViews service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
-var ServiceName_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "hypebid.ServiceName",
-	HandlerType: (*ServiceNameServer)(nil),
+var TwitchViews_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "hypebid.TwitchViews",
+	HandlerType: (*TwitchViewsServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
 			MethodName: "HealthCheck",
-			Handler:    _ServiceName_HealthCheck_Handler,
+			Handler:    _TwitchViews_HealthCheck_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "serviceName.proto",
+	Metadata: "twitchViews.proto",
 }

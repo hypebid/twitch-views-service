@@ -47,7 +47,7 @@ func RpcSetup(c *config.Config) (net.Listener, *grpc.Server, error) {
 			grpc_recovery.UnaryServerInterceptor(recovOpts...)),
 	)
 
-	pb.RegisterServiceNameServer(grpcServer, &Server{Config: c})
+	pb.RegisterTwitchViewsServer(grpcServer, &Server{Config: c})
 
 	return lis, grpcServer, nil
 }

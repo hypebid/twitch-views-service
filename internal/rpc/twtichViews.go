@@ -14,12 +14,12 @@ import (
 )
 
 type Server struct {
-	pb.UnsafeServiceNameServer
+	pb.UnsafeTwitchViewsServer
 	Config *config.Config
 }
 
 var opsProcessed = promauto.NewCounter(prometheus.CounterOpts{
-	Name: "serviceName_processed_ops_total",
+	Name: "twitchViews_processed_ops_total",
 	Help: "The total number of processed HealthCheck events",
 })
 

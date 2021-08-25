@@ -26,7 +26,7 @@ func (s *HeathCheckTestSuite) TestHealthCheckWithNoHash() {
 	}
 	defer conn.Close()
 
-	client := pb.NewServiceNameClient(conn)
+	client := pb.NewTwitchViewsClient(conn)
 	resp, err := client.HealthCheck(ctx, &pb.HealthRequest{Message: "testing healthcheck"})
 	if err != nil {
 		s.T().Fatalf("health check failed: %v", err)
@@ -51,7 +51,7 @@ func (s *HeathCheckTestSuite) TestHealthCheckWithHash_Negative() {
 	}
 	defer conn.Close()
 
-	client := pb.NewServiceNameClient(conn)
+	client := pb.NewTwitchViewsClient(conn)
 	resp, err := client.HealthCheck(ctx, &pb.HealthRequest{Message: "testing healthcheck"})
 
 	// asserts
@@ -79,7 +79,7 @@ func (s *HeathCheckTestSuite) TestHealthCheckWithHash_Positive() {
 	}
 	defer conn.Close()
 
-	client := pb.NewServiceNameClient(conn)
+	client := pb.NewTwitchViewsClient(conn)
 	resp, err := client.HealthCheck(ctx, &pb.HealthRequest{Message: "testing healthcheck"})
 	if err != nil {
 		s.T().Fatalf("failed to make request: %v", err)
