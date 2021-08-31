@@ -20,6 +20,7 @@ const _ = grpc.SupportPackageIsVersion7
 type TwitchViewsClient interface {
 	// Used to check on the status of the service and all it's dependencies
 	HealthCheck(ctx context.Context, in *HealthRequest, opts ...grpc.CallOption) (*HealthStatus, error)
+	GetStreamInfo(ctx context.Context, in *TwitchUser, opts ...grpc.CallOption) (*StreamInfo, error)
 }
 
 type twitchViewsClient struct {
@@ -39,12 +40,22 @@ func (c *twitchViewsClient) HealthCheck(ctx context.Context, in *HealthRequest, 
 	return out, nil
 }
 
+func (c *twitchViewsClient) GetStreamInfo(ctx context.Context, in *TwitchUser, opts ...grpc.CallOption) (*StreamInfo, error) {
+	out := new(StreamInfo)
+	err := c.cc.Invoke(ctx, "/hypebid.TwitchViews/GetStreamInfo", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // TwitchViewsServer is the server API for TwitchViews service.
 // All implementations must embed UnimplementedTwitchViewsServer
 // for forward compatibility
 type TwitchViewsServer interface {
 	// Used to check on the status of the service and all it's dependencies
 	HealthCheck(context.Context, *HealthRequest) (*HealthStatus, error)
+	GetStreamInfo(context.Context, *TwitchUser) (*StreamInfo, error)
 	mustEmbedUnimplementedTwitchViewsServer()
 }
 
@@ -54,6 +65,9 @@ type UnimplementedTwitchViewsServer struct {
 
 func (UnimplementedTwitchViewsServer) HealthCheck(context.Context, *HealthRequest) (*HealthStatus, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method HealthCheck not implemented")
+}
+func (UnimplementedTwitchViewsServer) GetStreamInfo(context.Context, *TwitchUser) (*StreamInfo, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetStreamInfo not implemented")
 }
 func (UnimplementedTwitchViewsServer) mustEmbedUnimplementedTwitchViewsServer() {}
 
@@ -86,6 +100,24 @@ func _TwitchViews_HealthCheck_Handler(srv interface{}, ctx context.Context, dec 
 	return interceptor(ctx, in, info, handler)
 }
 
+func _TwitchViews_GetStreamInfo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(TwitchUser)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TwitchViewsServer).GetStreamInfo(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/hypebid.TwitchViews/GetStreamInfo",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TwitchViewsServer).GetStreamInfo(ctx, req.(*TwitchUser))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // TwitchViews_ServiceDesc is the grpc.ServiceDesc for TwitchViews service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -96,6 +128,10 @@ var TwitchViews_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "HealthCheck",
 			Handler:    _TwitchViews_HealthCheck_Handler,
+		},
+		{
+			MethodName: "GetStreamInfo",
+			Handler:    _TwitchViews_GetStreamInfo_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

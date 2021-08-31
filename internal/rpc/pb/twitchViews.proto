@@ -11,6 +11,7 @@ package hypebid;
 service TwitchViews{
   // Used to check on the status of the service and all it's dependencies
   rpc HealthCheck(HealthRequest) returns (HealthStatus) {}
+  rpc GetStreamInfo(TwitchUser) returns (StreamInfo) {}
 }
 
 message HealthRequest{
@@ -25,4 +26,21 @@ message HealthStatus{
   string releaseVersion = 5;
   bool databaseOnline = 6;
   string message = 7;
+}
+
+message TwitchUser{
+  string userLogin = 1;
+}
+
+message StreamInfo {
+  string transactionId = 1;
+  string streamId = 2;
+  string userId = 3;
+  string userLogin = 4;
+  string userName = 5;
+  bool isLive = 6;
+  int32 viewerCount = 7;
+  string startedAt = 8;
+  string language = 9;
+  bool isMature = 10;
 }

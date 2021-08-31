@@ -23,6 +23,8 @@ type Constants struct {
 	HashSecret      string
 	MetadataKeyList string
 	MetadataHashKey string
+	TwitchClientId  string
+	TwitchSecret    string
 }
 
 type PsqlInstance struct {
@@ -51,6 +53,8 @@ func NewServiceConfig() (*Config, error) {
 		HashSecret:      os.Getenv("HASH_SECRET"),
 		MetadataKeyList: os.Getenv("METADATA_KEY_LIST"),
 		MetadataHashKey: os.Getenv("METADATA_HASH_KEY"),
+		TwitchClientId:  os.Getenv("TWITCH_CLIENT_ID"),
+		TwitchSecret:    os.Getenv("TWITCH_SECRET"),
 	}
 
 	// create logger
