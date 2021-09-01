@@ -2,6 +2,7 @@ package rpc
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"net/http"
 	"runtime"
@@ -25,6 +26,7 @@ type Server struct {
 }
 
 var token *oauth2.Token
+var retries int
 
 var opsProcessed = promauto.NewCounter(prometheus.CounterOpts{
 	Name: "twitchViews_processed_ops_total",
@@ -79,9 +81,52 @@ func (s *Server) GetStreamInfo(ctx context.Context, req *pb.TwitchUser) (*pb.Str
 		}
 	}
 	logger.Info("make request to get stream info")
-	logger.Info("token: ", token.AccessToken)
+	logger.Debug("token: ", token.AccessToken)
+
+	var respMap *StreamInfo
+	respMap, err := makeRequest(logger, s, req.GetUserLogin())
+	if err != nil {
+		return nil, err
+	}
+
+	logger.Printf("resp: %+v", respMap)
+
+	// check that a value was returned
+	if len(respMap.Data) < 1 {
+		logger.Info("entering retry logic")
+		// retry logic
+		if retries < 3 {
+			retries++
+			err := getOAuthToken(logger, s.Config)
+			if err != nil {
+				return nil, err
+			}
+			logger.Info("doing retry # ", retries)
+			// recurrsion
+			//nolint
+			s.GetStreamInfo(ctx, req)
+		}
+		retries = 0
+		return nil, errors.New("stream is not online")
+	}
+
+	return &pb.StreamInfo{
+		TransactionId: tId.(string),
+		StreamId:      respMap.Data[0].ID,
+		UserId:        respMap.Data[0].UserID,
+		UserLogin:     respMap.Data[0].UserLogin,
+		UserName:      respMap.Data[0].UserName,
+		IsLive:        true,
+		ViewerCount:   int32(respMap.Data[0].ViewerCount),
+		StartedAt:     respMap.Data[0].StartedAt.String(),
+		Language:      respMap.Data[0].Language,
+		IsMature:      respMap.Data[0].IsMature,
+	}, nil
+}
+
+func makeRequest(logger *logrus.Entry, s *Server, stream string) (*StreamInfo, error) {
 	client := &http.Client{}
-	r, err := http.NewRequest("GET", fmt.Sprintf("https://api.twitch.tv/helix/streams?user_login=%v", req.GetUserLogin()), nil)
+	r, err := http.NewRequest("GET", fmt.Sprintf("https://api.twitch.tv/helix/streams?user_login=%v", stream), nil)
 	r.Header.Add("Authorization", fmt.Sprintf("Bearer %s", token.AccessToken))
 	r.Header.Add("Client-id", s.Config.Constants.TwitchClientId)
 	if err != nil {
@@ -99,18 +144,7 @@ func (s *Server) GetStreamInfo(ctx context.Context, req *pb.TwitchUser) (*pb.Str
 	}
 	logger.Info("resp mapped")
 
-	return &pb.StreamInfo{
-		TransactionId: tId.(string),
-		StreamId:      respMap.Data[0].ID,
-		UserId:        respMap.Data[0].UserID,
-		UserLogin:     respMap.Data[0].UserLogin,
-		UserName:      respMap.Data[0].UserName,
-		IsLive:        true,
-		ViewerCount:   int32(respMap.Data[0].ViewerCount),
-		StartedAt:     respMap.Data[0].StartedAt.String(),
-		Language:      respMap.Data[0].Language,
-		IsMature:      respMap.Data[0].IsMature,
-	}, nil
+	return &respMap, nil
 }
 
 func getOAuthToken(logger *logrus.Entry, config *config.Config) error {
