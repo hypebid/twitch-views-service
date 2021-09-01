@@ -67,7 +67,7 @@ func (s *Server) HealthCheck(ctx context.Context, req *pb.HealthRequest) (*pb.He
 	}, nil
 }
 
-func (s *Server) GetStreamInfo(ctx context.Context, req *pb.TwitchUser) (*pb.StreamInfo, error) {
+func (s *Server) GetStreamInfo(ctx context.Context, req *pb.TwitchUser) (*pb.StreamList, error) {
 	// Build logger with TransactionId
 	tId := ctx.Value(middleware.Grpc_ReqId_Marker)
 	pc, _, _, _ := runtime.Caller(0)
@@ -83,16 +83,13 @@ func (s *Server) GetStreamInfo(ctx context.Context, req *pb.TwitchUser) (*pb.Str
 	logger.Info("make request to get stream info")
 	logger.Debug("token: ", token.AccessToken)
 
-	var respMap *StreamInfo
 	respMap, err := makeRequest(logger, s, req.GetUserLogin())
 	if err != nil {
 		return nil, err
 	}
 
-	logger.Printf("resp: %+v", respMap)
-
 	// check that a value was returned
-	if len(respMap.Data) < 1 {
+	if len(respMap.DataList) < 1 {
 		logger.Info("entering retry logic")
 		// retry logic
 		if retries < 3 {
@@ -110,18 +107,23 @@ func (s *Server) GetStreamInfo(ctx context.Context, req *pb.TwitchUser) (*pb.Str
 		return nil, errors.New("stream is not online")
 	}
 
-	return &pb.StreamInfo{
-		TransactionId: tId.(string),
-		StreamId:      respMap.Data[0].ID,
-		UserId:        respMap.Data[0].UserID,
-		UserLogin:     respMap.Data[0].UserLogin,
-		UserName:      respMap.Data[0].UserName,
-		IsLive:        true,
-		ViewerCount:   int32(respMap.Data[0].ViewerCount),
-		StartedAt:     respMap.Data[0].StartedAt.String(),
-		Language:      respMap.Data[0].Language,
-		IsMature:      respMap.Data[0].IsMature,
-	}, nil
+	streamList := &pb.StreamList{}
+	streamList.TransactionId = tId.(string)
+	for _, v := range respMap.DataList {
+		streamList.StreamInfo = append(streamList.StreamInfo, &pb.StreamInfo{
+			StreamId:    v.ID,
+			UserId:      v.UserID,
+			UserLogin:   v.UserLogin,
+			UserName:    v.UserName,
+			IsLive:      true,
+			ViewerCount: int32(v.ViewerCount),
+			StartedAt:   v.StartedAt.String(),
+			Language:    v.Language,
+			IsMature:    v.IsMature,
+		})
+	}
+
+	return streamList, nil
 }
 
 func makeRequest(logger *logrus.Entry, s *Server, stream string) (*StreamInfo, error) {

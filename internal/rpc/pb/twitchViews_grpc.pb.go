@@ -20,7 +20,7 @@ const _ = grpc.SupportPackageIsVersion7
 type TwitchViewsClient interface {
 	// Used to check on the status of the service and all it's dependencies
 	HealthCheck(ctx context.Context, in *HealthRequest, opts ...grpc.CallOption) (*HealthStatus, error)
-	GetStreamInfo(ctx context.Context, in *TwitchUser, opts ...grpc.CallOption) (*StreamInfo, error)
+	GetStreamInfo(ctx context.Context, in *TwitchUser, opts ...grpc.CallOption) (*StreamList, error)
 }
 
 type twitchViewsClient struct {
@@ -40,8 +40,8 @@ func (c *twitchViewsClient) HealthCheck(ctx context.Context, in *HealthRequest, 
 	return out, nil
 }
 
-func (c *twitchViewsClient) GetStreamInfo(ctx context.Context, in *TwitchUser, opts ...grpc.CallOption) (*StreamInfo, error) {
-	out := new(StreamInfo)
+func (c *twitchViewsClient) GetStreamInfo(ctx context.Context, in *TwitchUser, opts ...grpc.CallOption) (*StreamList, error) {
+	out := new(StreamList)
 	err := c.cc.Invoke(ctx, "/hypebid.TwitchViews/GetStreamInfo", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -55,7 +55,7 @@ func (c *twitchViewsClient) GetStreamInfo(ctx context.Context, in *TwitchUser, o
 type TwitchViewsServer interface {
 	// Used to check on the status of the service and all it's dependencies
 	HealthCheck(context.Context, *HealthRequest) (*HealthStatus, error)
-	GetStreamInfo(context.Context, *TwitchUser) (*StreamInfo, error)
+	GetStreamInfo(context.Context, *TwitchUser) (*StreamList, error)
 	mustEmbedUnimplementedTwitchViewsServer()
 }
 
@@ -66,7 +66,7 @@ type UnimplementedTwitchViewsServer struct {
 func (UnimplementedTwitchViewsServer) HealthCheck(context.Context, *HealthRequest) (*HealthStatus, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method HealthCheck not implemented")
 }
-func (UnimplementedTwitchViewsServer) GetStreamInfo(context.Context, *TwitchUser) (*StreamInfo, error) {
+func (UnimplementedTwitchViewsServer) GetStreamInfo(context.Context, *TwitchUser) (*StreamList, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetStreamInfo not implemented")
 }
 func (UnimplementedTwitchViewsServer) mustEmbedUnimplementedTwitchViewsServer() {}
