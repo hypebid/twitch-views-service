@@ -8,6 +8,7 @@ import (
 	_ "github.com/quasilyte/go-ruleguard/dsl"
 
 	"github.com/hypebid/twitch-views-service/internal/config"
+	"github.com/hypebid/twitch-views-service/internal/db"
 	"github.com/hypebid/twitch-views-service/internal/rpc"
 )
 
@@ -26,6 +27,9 @@ func main() {
 	c.Log.Info("starting metrics route...")
 	go metrics(c)
 	c.Log.Info("done")
+
+	c.Log.Info("starting twitch views ticker service")
+	go db.TwitchViewsTicker(c, "ruhdacted")
 
 	c.Log.Info("setting up grpc server...")
 	lis, grpcServer, err := rpc.RpcSetup(c)
